@@ -41,9 +41,6 @@ app.post("/plans", async (req, res) => {
     if (!destination || !startDate || !endDate || !activities) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    console.log("Received data:", req.body); // Log the received data for debugging
-
     const newPlan = new Plans({
       destination,
       startDate,
@@ -54,7 +51,6 @@ app.post("/plans", async (req, res) => {
     await newPlan.save();
     res.status(201).json(newPlan);
   } catch (error) {
-    console.error("Error creating plan:", error); // Log the full error
     res.status(400).json({
       message: "Error creating plan",
       error: error.message || error,

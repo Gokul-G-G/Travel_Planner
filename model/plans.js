@@ -6,5 +6,5 @@ const planSchema = new mongoose.Schema({
   activities: Array,
 });
 
-const Plan = mongoose.model("plans", planSchema);
-module.exports = Plan;
+const Plans = mongoose.model("plans", planSchema);
+module.exports = Plans;
