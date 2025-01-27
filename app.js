@@ -11,7 +11,9 @@ app.use(express.json());
 
 // Connect to MongoDB using the URI stored in the .env file
 async function main() {
-  await mongoose.connect(process.env.MONGODB_URI);
+  await mongoose.connect(
+    "mongodb+srv://gokulraja143:Wizardboy%40123@cluster0.jolwn.mongodb.net/Plan"
+  );
 }
 
 main()
