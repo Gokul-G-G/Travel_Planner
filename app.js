@@ -1,4 +1,5 @@
-require("dotenv").config(); // Load environment variables from .env file
+// Load environment variables from .env file
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const Plans = require("./model/plans");
@@ -30,6 +31,24 @@ app.get("/plans", async (req, res) => {
     res.status(200).json(plans);
   } catch (error) {
     res.status(400).json({ message: "Error fetching plans", error });
+  }
+});
+
+
+// Get a specific plan by ID
+app.get("/plans/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const plan = await Plans.findById(id);
+
+    if (!plan) {
+      return res.status(404).json({ message: "Plan not found" });
+    }
+
+    res.status(200).json(plan);
+  } catch (error) {
+    res.status(400).json({ message: "Error fetching plan", error });
   }
 });
 
@@ -73,7 +92,7 @@ app.patch("/plans/:id", async (req, res) => {
         activities,
       },
       { new: true }
-    ); // `new: true` ensures we return the updated document
+    );
 
     if (!updatedPlan) {
       return res.status(404).json({ message: "Plan not found" });
@@ -84,6 +103,25 @@ app.patch("/plans/:id", async (req, res) => {
     res.status(400).json({ message: "Error updating plan", error });
   }
 });
+
+
+// Delete a specific plan (DELETE)
+app.delete("/plans/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedPlan = await Plans.findByIdAndDelete(id);
+
+    if (!deletedPlan) {
+      return res.status(404).json({ message: "Plan not found" });
+    }
+
+    res.status(200).json({ message: "Plan deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Error deleting plan", error });
+  }
+});
+
 
 // Listening on the specified port
 app.listen(port, () => {
