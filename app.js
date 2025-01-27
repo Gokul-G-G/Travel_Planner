@@ -34,23 +34,6 @@ app.get("/plans", async (req, res) => {
   }
 });
 
-// Get a specific plan by ID
-app.get("/plans/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const plan = await Plans.findById(id);
-    
-    if (!plan) {
-      return res.status(404).json({ message: "Plan not found" });
-    }
-    res.status(200).json(plan);
-  } catch (error) {
-    res.status(400).json({ message: "Error fetching plan", error });
-  }
-});
-
-
 // Create a new plan
 app.post("/plans", async (req, res) => {
   try {
@@ -59,6 +42,9 @@ app.post("/plans", async (req, res) => {
     if (!destination || !startDate || !endDate || !activities) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+
+    console.log("Received data:", req.body); // Log the received data for debugging
+
     const newPlan = new Plans({
       destination,
       startDate,
@@ -69,6 +55,7 @@ app.post("/plans", async (req, res) => {
     await newPlan.save();
     res.status(201).json(newPlan);
   } catch (error) {
+    console.error("Error creating plan:", error); // Log the full error
     res.status(400).json({
       message: "Error creating plan",
       error: error.message || error,
@@ -102,24 +89,6 @@ app.patch("/plans/:id", async (req, res) => {
     res.status(400).json({ message: "Error updating plan", error });
   }
 });
-
-// Delete a specific plan (DELETE)
-app.delete("/plans/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const deletedPlan = await Plans.findByIdAndDelete(id);
-
-    if (!deletedPlan) {
-      return res.status(404).json({ message: "Plan not found" });
-    }
-
-    res.status(200).json({ message: "Plan deleted successfully" });
-  } catch (error) {
-    res.status(400).json({ message: "Error deleting plan", error });
-  }
-});
-
 
 // Listening on the specified port
 app.listen(port, () => {
