@@ -9,9 +9,20 @@ const port = 3001;
 app.use(express.json());
 
 // Connect to MongoDB using the URI stored in the .env file
+const dbURI = process.env.MONGODB_URI; // Use the environment variable
+
 async function main() {
-  await mongoose.connect(process.env.MONGODB_URI);
+  try {
+    await mongoose.connect(dbURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("DB connected successfully!");
+  } catch (err) {
+    console.error("DB connection error:", err);
+  }
 }
+
 
 main()
   .then(() => console.log("DB connected"))
